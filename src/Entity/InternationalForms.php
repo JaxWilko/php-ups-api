@@ -228,7 +228,7 @@ class InternationalForms implements NodeInterface
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getTypes()
     {
