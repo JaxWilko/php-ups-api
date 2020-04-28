@@ -54,6 +54,11 @@ class ShipmentServiceOptions implements NodeInterface
     private $internationalForms;
 
     /**
+     * @var
+     */
+    private $termsOfShipment;
+
+    /**
      * @var null|LabelMethod
      */
     private $labelMethod;
@@ -118,6 +123,9 @@ class ShipmentServiceOptions implements NodeInterface
             if (isset($response->InternationalForms)) {
                 $this->setInternationalForms($response->InternationalForms);
             }
+            if (isset($response->TermsOfShipment)) {
+                $this->setTermsOfShipment($response->TermsOfShipment);
+            }
             if (isset($response->ImportControlIndicator)) {
                 $this->setImportControlIndicator($response->ImportControlIndicator);
             }
@@ -172,6 +180,10 @@ class ShipmentServiceOptions implements NodeInterface
 
         if (isset($this->internationalForms)) {
             $node->appendChild($this->internationalForms->toNode($document));
+        }
+
+        if ($this->getTermsOfShipment()) {
+            $node->appendChild($document->createElement('TermsOfShipment', $this->getTermsOfShipment()));
         }
 
         if (isset($this->deliveryConfirmation)) {
@@ -245,6 +257,26 @@ class ShipmentServiceOptions implements NodeInterface
     public function getInternationalForms()
     {
         return $this->internationalForms;
+    }
+
+    /**
+     * @param $terms
+     *
+     * @return $this
+     */
+    public function setTermsOfShipment($terms)
+    {
+        $this->termsOfShipment = $terms;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTermsOfShipment()
+    {
+        return $this->termsOfShipment;
     }
 
     /**
