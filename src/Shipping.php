@@ -441,14 +441,15 @@ class Shipping extends Ups
      * Create a Shipment Accept request (generate a shipping label).
      *
      * @param string $shipmentDigest The UPS Shipment Digest received from a ShipConfirm request.
+     * @param int $subversion
      *
      * @throws Exception
      *
      * @return \stdClass
      */
-    public function accept($shipmentDigest)
+    public function accept($shipmentDigest, $subversion = null)
     {
-        $request = $this->createAcceptRequest($shipmentDigest);
+        $request = $this->createAcceptRequest($shipmentDigest, $subversion);
         $this->response = $this->getRequest()->request($this->createAccess(), $request, $this->compileEndpointUrl($this->shipAcceptEndpoint));
         $response = $this->response->getResponse();
 
@@ -470,16 +471,21 @@ class Shipping extends Ups
      * Creates a ShipAccept request.
      *
      * @param string $shipmentDigest
+     * @param int $subversion
      *
      * @return string
      */
-    private function createAcceptRequest($shipmentDigest)
+    private function createAcceptRequest($shipmentDigest, $subversion = null)
     {
         $xml = new DOMDocument();
         $xml->formatOutput = true;
 
         $container = $xml->appendChild($xml->createElement('ShipmentAcceptRequest'));
         $request = $container->appendChild($xml->createElement('Request'));
+
+        if ($subversion) {
+            $request->appendChild($xml->createElement('SubVersion', $subversion));
+        }
 
         $node = $xml->importNode($this->createTransactionNode(), true);
         $request->appendChild($node);
