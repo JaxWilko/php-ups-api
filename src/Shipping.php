@@ -77,7 +77,7 @@ class Shipping extends Ups
         ShipmentRequestReceiptSpecification $receiptSpec = null,
         $subversion = null
     ) {
-        $request = $this->createConfirmRequest($validation, $shipment, $labelSpec, $receiptSpec);
+        $request = $this->createConfirmRequest($validation, $shipment, $labelSpec, $receiptSpec, $subversion);
         $this->response = $this->getRequest()->request($this->createAccess(), $request, $this->compileEndpointUrl($this->shipConfirmEndpoint));
         $response = $this->response->getResponse();
 
