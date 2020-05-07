@@ -66,16 +66,16 @@ class Shipping extends Ups
      * @param Shipment $shipment Shipment data container.
      * @param ShipmentRequestLabelSpecification|null $labelSpec LabelSpecification data. Optional
      * @param ShipmentRequestReceiptSpecification|null $receiptSpec ShipmentRequestReceiptSpecification data. Optional
-     *
-     * @throws Exception
-     *
+     * @param int|null $subversion
      * @return \stdClass
+     * @throws Exception
      */
     public function confirm(
         $validation,
         Shipment $shipment,
         ShipmentRequestLabelSpecification $labelSpec = null,
-        ShipmentRequestReceiptSpecification $receiptSpec = null
+        ShipmentRequestReceiptSpecification $receiptSpec = null,
+        $subversion = null
     ) {
         $request = $this->createConfirmRequest($validation, $shipment, $labelSpec, $receiptSpec);
         $this->response = $this->getRequest()->request($this->createAccess(), $request, $this->compileEndpointUrl($this->shipConfirmEndpoint));
@@ -102,6 +102,7 @@ class Shipping extends Ups
      * @param Shipment $shipment
      * @param ShipmentRequestLabelSpecification|null $labelSpec
      * @param ShipmentRequestReceiptSpecification|null $receiptSpec
+     * @param int|null $subversion
      *
      * @return string
      */
@@ -109,7 +110,8 @@ class Shipping extends Ups
         $validation,
         Shipment $shipment,
         ShipmentRequestLabelSpecification $labelSpec = null,
-        ShipmentRequestReceiptSpecification $receiptSpec = null
+        ShipmentRequestReceiptSpecification $receiptSpec = null,
+        $subversion = null
     ) {
         $xml = new DOMDocument();
         $xml->formatOutput = true;
@@ -126,6 +128,9 @@ class Shipping extends Ups
         $request->appendChild($xml->createElement('RequestAction', 'ShipConfirm'));
         $request->appendChild($xml->createElement('RequestOption', $validation ?: 'nonvalidate'));
 
+        if ($subversion) {
+            $request->appendChild($xml->createElement('SubVersion', $subversion));
+        }
         // Page 47
         $shipmentNode = $container->appendChild($xml->createElement('Shipment'));
 
