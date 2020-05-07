@@ -1,6 +1,5 @@
 {
     "name": "jaxwilko/ups-api",
-    "version": "1.0.5",
     "type": "library",
     "description": "PHP UPS API",
     "keywords": [
